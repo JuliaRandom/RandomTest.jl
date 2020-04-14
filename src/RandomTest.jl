@@ -85,4 +85,9 @@ end
 test(::Type{Pair{K,V}}) where {K,V} = make(Pair{K,V}, test(K), test(V))
 
 
+## Tuple #####################################################################
+
+test(::Type{T}) where {T<:Tuple} = make(Tuple, test.(fieldtypes(T))...)
+
+
 end # module

@@ -65,7 +65,7 @@ end
     end
 end
 
-@testset "Pair" begin
+@testset "Pair/Tuple" begin
     Ts = (Int,Integer,Bool)
     for P in Iterators.product(Ts, Ts)
         P = Pair{P...}
@@ -73,5 +73,10 @@ end
         T = rand(Ts)
         @test rand(test(Pair{T,P})) isa Pair{T,P}
         @test rand(test(Pair{P,T})) isa Pair{P,T}
+
+        @test rand(test(Tuple{P,Ts...})) isa Tuple{P,Ts...}
+        @test rand(test(Tuple{P,Integer,P})) isa Tuple{P,Integer,P}
     end
+
+    @test rand(test(Tuple{Ts...})) isa Tuple{Ts...}
 end
