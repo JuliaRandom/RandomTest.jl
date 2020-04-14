@@ -46,12 +46,18 @@ end
         @test any(x -> x == 0, a) # fails in less than 1/100000 for Int64
         @test any(x -> x ∈ (-1, 1), a)
     end
+
     for T = (UInt8, UInt32, UInt64)
         a = rand(test(T), 1000)
         @test any(x -> x == 0, a)
         @test any(x -> x == 1, a)
     end
+
     a = rand(test(Bool), 100)
     @test any(a)
     @test !all(a)
+
+    a = rand(test(Integer), 100)
+    @test length(eltype.(a)) > 3
+    @test all(x -> x isa Integer, a)
 end
