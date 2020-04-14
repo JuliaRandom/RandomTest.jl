@@ -51,25 +51,32 @@ test(::Type{T}) where {T} = Tester{T}()
 # TODO: specialize Bool
 Sampler(::Type{RNG}, d::Tester{T}, n::Repetition
         ) where {RNG<:AbstractRNG,T<:Integer} =
+    sampler_tester(RNG, d, n, Val(isconcretetype(T)))
+
+sampler_tester(::Type{RNG}, d::Tester{T}, n, concrete::Val{true}
+               ) where {RNG,T<:Integer} =
     SamplerSimple(d, Sampler(RNG, minsize(T):maxsize(T), n))
 
-function rand(rng::AbstractRNG, sp::SamplerSimple{Tester{T}}) where T
+function rand(rng::AbstractRNG, sp::SamplerSimple{Tester{T}}
+              ) where T <: Integer
     sz = rand(rng, sp.data)
     rand(rng, make(T, Size(sz)))
 end
 
 
-### Integer
+### non concrete types
 
-const test_Integer = [Base.BitInteger_types...; Bool]
+const test_registered = [Base.BitInteger_types...; Bool]
 
-Sampler(::Type{RNG}, d::Tester{Integer}, n::Repetition
-        ) where {RNG<:AbstractRNG} =
-    SamplerTag{Cont{Integer}}(Sampler(RNG, test_Integer, n))
+test_select(::Type{T}) where T = filter(X -> X <: T, test_registered)
 
-function rand(rng::AbstractRNG, sp::SamplerTag{Cont{Integer}})
-    T = rand(rng, sp.data)
-    rand(rng, test(T))
+sampler_tester(::Type{RNG}, d::Tester{T}, n::Repetition, concrete::Val{false},
+               ) where {RNG<:AbstractRNG,T} =
+    SamplerTag{Cont{Integer}}(Sampler(RNG, test_select(T), n))
+
+function rand(rng::AbstractRNG, sp::SamplerTag{Cont{T}}) where T
+    X = rand(rng, sp.data)
+    rand(rng, test(X))
 end
 
 

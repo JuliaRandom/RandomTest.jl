@@ -57,7 +57,10 @@ end
     @test any(a)
     @test !all(a)
 
-    a = rand(test(Integer), 100)
-    @test length(eltype.(a)) > 3
-    @test all(x -> x isa Integer, a)
+    for T = (Integer, Signed, Unsigned, Union{Bool,Int8,UInt8,Int,UInt})
+        a = rand(test(T), 100)
+        @test eltype(a) == T
+        @test length(eltype.(a)) > 4
+        @test all(x -> x isa T, a)
+    end
 end
