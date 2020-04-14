@@ -64,3 +64,14 @@ end
         @test all(x -> x isa T, a)
     end
 end
+
+@testset "Pair" begin
+    Ts = (Int,Integer,Bool)
+    for P in Iterators.product(Ts, Ts)
+        P = Pair{P...}
+        @test rand(test(P)) isa P
+        T = rand(Ts)
+        @test rand(test(Pair{T,P})) isa Pair{T,P}
+        @test rand(test(Pair{P,T})) isa Pair{P,T}
+    end
+end

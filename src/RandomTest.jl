@@ -80,4 +80,9 @@ function rand(rng::AbstractRNG, sp::SamplerTag{Cont{T}}) where T
 end
 
 
+## Pair ######################################################################
+
+test(::Type{Pair{K,V}}) where {K,V} = make(Pair{K,V}, test(K), test(V))
+
+
 end # module
