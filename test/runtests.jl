@@ -37,3 +37,21 @@ using RandomTest: minsize, maxsize
     @test_throws ArgumentError rand(make(Int64, Size(64)))
     @test_throws ArgumentError rand(make(UInt64, Size(65)))
 end
+
+@testset "Tester" begin
+    for T = (Int8, Int32, Int64)
+        a = rand(test(T), 1000)
+        @test any(x -> x < 0, a)
+        @test any(x -> x > 0, a)
+        @test any(x -> x == 0, a) # fails in less than 1/100000 for Int64
+        @test any(x -> x ∈ (-1, 1), a)
+    end
+    for T = (UInt8, UInt32, UInt64)
+        a = rand(test(T), 1000)
+        @test any(x -> x == 0, a)
+        @test any(x -> x == 1, a)
+    end
+    a = rand(test(Bool), 100)
+    @test any(a)
+    @test !all(a)
+end

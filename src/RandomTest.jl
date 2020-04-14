@@ -1,11 +1,11 @@
 module RandomTest
 
-using Random: AbstractRNG
-import Random: Sampler
+using Random: AbstractRNG, SamplerSimple
+import Random: rand, Sampler
 
-using RandomExtensions: make, Make1, Repetition
+using RandomExtensions: Distribution, make, Make1, Repetition
 
-export make, Size
+export make, Size, test
 
 
 ## Size ######################################################################
@@ -37,5 +37,23 @@ end
     throw(ArgumentError(
         "size for type $T must satisfy 0 <= size < $maxsz (got $sz)"))
 end
+
+
+## Tester ####################################################################
+
+struct Tester{T} <: Distribution{T} end
+
+test(::Type{T}) where {T} = Tester{T}()
+
+# TODO: specialize Bool
+Sampler(::Type{RNG}, d::Tester{T}, n::Repetition
+        ) where {RNG<:AbstractRNG,T<:Integer} =
+    SamplerSimple(d, Sampler(RNG, minsize(T):maxsize(T), n))
+
+function rand(rng::AbstractRNG, sp::SamplerSimple{Tester{T}}) where T
+    sz = rand(rng, sp.data)
+    rand(rng, make(T, Size(sz)))
+end
+
 
 end # module
