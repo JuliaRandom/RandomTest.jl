@@ -5,7 +5,22 @@ import Random: rand, Sampler
 
 using RandomExtensions: Cont, Distribution, make, Make1, Repetition
 
-export make, Size, test
+export make, randt, Size, test
+
+
+## randt #####################################################################
+
+randt(                  ::Type{X}=Float64) where {X} = rand(     test(X))
+randt(rng::AbstractRNG, ::Type{X}=Float64) where {X} = rand(rng, test(X))
+
+randt(                  dims::Integer...) = rand(     test(Float64), dims...)
+randt(rng::AbstractRNG, dims::Integer...) = rand(rng, test(Float64), dims...)
+
+randt(                  ::Type{X}, dims...) where {X} =
+    rand(     test(X), dims...)
+
+randt(rng::AbstractRNG, ::Type{X}, dims...) where {X} =
+    rand(rng, test(X), dims...)
 
 
 ## Size ######################################################################

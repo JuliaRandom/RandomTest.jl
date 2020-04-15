@@ -1,6 +1,22 @@
 using Test, RandomTest
 
 using RandomTest: minsize, maxsize
+using Random: MersenneTwister
+
+const rng = MersenneTwister()
+
+@testset "randt" begin
+    @test_broken randt() isa Float64
+    @test_broken randt(rng) isa Float64
+    @test randt(Int) isa Int
+    @test randt(rng, Int) isa Int
+    @test_broken randt(2, 3) isa Matrix{Float64}
+    @test_broken randt(rng, 2, 3) isa Matrix{Float64}
+    @test randt(Int, 2, 3) isa Matrix{Int}
+    @test randt(rng, Int, 2, 3) isa Matrix{Int}
+    @test randt(Int, (2, 3)) isa Matrix{Int}
+    @test randt(rng, Int, (2, 3)) isa Matrix{Int}
+end
 
 @testset "Size" begin
     @test minsize(Bool) == false
