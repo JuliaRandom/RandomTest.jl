@@ -80,6 +80,12 @@ function rand(rng::AbstractRNG, sp::SamplerTag{Cont{T}}) where T
 end
 
 
+## singleton types ###########################################################
+
+test(::Type{Nothing}) = (nothing,)
+test(::Type{Missing}) = (missing,)
+
+
 ## Pair ######################################################################
 
 test(::Type{Pair{K,V}}) where {K,V} = make(Pair{K,V}, test(K), test(V))

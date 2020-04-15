@@ -65,6 +65,11 @@ end
     end
 end
 
+@testset "singletons" begin
+    @test rand(test(Nothing)) === nothing
+    @test rand(test(Missing)) === missing
+end
+
 @testset "Pair/Tuple" begin
     Ts = (Int,Integer,Bool)
     for P in Iterators.product(Ts, Ts)
