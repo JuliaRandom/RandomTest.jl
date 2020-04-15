@@ -1,9 +1,10 @@
 module RandomTest
 
-using Random: AbstractRNG, SamplerSimple, SamplerTag
+using Random: AbstractRNG
 import Random: rand, Sampler
 
-using RandomExtensions: Cont, Distribution, make, Make1, Repetition
+using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
+                        SamplerSimple, SamplerTag, SamplerTrivial
 
 export make, randt, Size, test
 
@@ -92,6 +93,20 @@ sampler_tester(::Type{RNG}, d::Tester{T}, n::Repetition, concrete::Val{false},
 function rand(rng::AbstractRNG, sp::SamplerTag{Cont{T}}) where T
     X = rand(rng, sp.data)
     rand(rng, test(X))
+end
+
+
+## floats ####################################################################
+
+function rand(rng::AbstractRNG, sp::SamplerTrivial{Tester{Float64}})
+    u = rand(rng, UInt64)
+    e = Base.exponent_mask(Float64) & u
+    if e == 0 || e == Base.exponent_mask(Float64)
+        if rand(rng, Bool)
+            u &= ~Base.significand_mask(Float64) # set to infinity or 0.0
+        end
+    end
+    reinterpret(Float64, u)
 end
 
 
