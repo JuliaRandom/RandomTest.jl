@@ -1,12 +1,14 @@
 module RandomTest
 
-using Random: AbstractRNG
+using Random: AbstractRNG, gentype
 import Random: rand, Sampler
 
 using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
                         SamplerSimple, SamplerTag, SamplerTrivial
 
-export make, randt, Size, test
+export make, randt, Size, Sized, test
+
+include("adapters.jl")
 
 
 ## randt #####################################################################

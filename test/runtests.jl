@@ -1,9 +1,11 @@
 using Test, RandomTest
 
 using RandomTest: minsize, maxsize
-using Random: MersenneTwister
+using Random: MersenneTwister, gentype
 
 const rng = MersenneTwister()
+
+include("adapters.jl")
 
 @testset "randt" begin
     @test randt() isa Float64
