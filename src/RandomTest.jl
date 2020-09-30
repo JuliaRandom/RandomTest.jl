@@ -10,7 +10,7 @@ using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
 
 export make, randt, Size, test
 export Sized, Staged, Abs
-export Small
+export Small, Nat
 
 include("scalars.jl")
 include("adapters.jl")

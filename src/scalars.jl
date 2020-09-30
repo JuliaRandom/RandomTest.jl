@@ -23,3 +23,11 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{Small{T}}) where {T<:Integer}
         return round(T, x)
     end
 end
+
+
+## Nat
+
+# might be given it's own distinct type
+
+Nat(::Type{T}=Int, scale::Real=33.0) where {T<:Integer} = Abs(Small(T, scale))
+Nat(scale::Real) = Nat(Int, scale)

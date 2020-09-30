@@ -34,3 +34,11 @@
     d = Small(Int8, 100)
     @test rand(d, 1000) isa Vector{Int8} # must not error out
 end
+
+@testset "Nat" begin
+    for d in (Nat(), Nat(Int), Nat(33.0), Nat(Int, 33.0))
+        @test d isa Abs{Int64,Small{Int64}}
+    end
+
+    # TODO: test scale
+end
