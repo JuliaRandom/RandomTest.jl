@@ -23,3 +23,23 @@
     @test gentype(d) == Int
     @test rand(d) ∈ 1:3
 end
+
+@testset "Staged" begin
+    for d in (Staged{Vector{Int}}(sz -> make(Vector, 1:sz, sz), 1:9),
+              Staged(sz -> make(Vector, 1:sz, sz), 1:9))
+        @test gentype(d) == Vector{Int}
+        v = rand(d)
+        @test length(v) ∈ 1:9
+        @test all(∈(1:9), v)
+    end
+
+    d = Staged((Int, UInt, Bool)) do T
+        make(Vector, T, 3)
+    end
+    # we don't test gentype(d), it's too hard on the compiler
+    v = rand(d, 10)
+    @test all(x -> x isa Vector, v)
+    es =  Set(eltype.(v))
+    @test length(es) > 1
+    @test es ⊆ [Int, UInt, Bool]
+end

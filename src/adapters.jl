@@ -24,3 +24,22 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Sized})
                         convert(T, sz)
     rand(rng, sized.dist(sz))
 end
+
+
+## Staged
+
+struct Staged{X,D<:Function,S} <: Distribution{X}
+    dist::D
+    inner::S
+
+    Staged{X}(dist::D, inner::S) where {X,D,S} = new{X,D,S}(dist, inner)
+end
+
+function Staged(dist::D, inner) where {D<:Function} # specialize on dist
+    N = gentype(inner)
+    X = gentype(Core.Compiler.return_type(dist, (N,)))
+    Staged{X}(dist, inner)
+end
+
+rand(rng::AbstractRNG, sp::SamplerTrivial{<:Staged}) =
+    rand(rng, sp[].dist(rand(rng, sp[].inner)))

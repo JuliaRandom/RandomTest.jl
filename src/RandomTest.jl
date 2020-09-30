@@ -6,7 +6,7 @@ import Random: rand, Sampler
 using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
                         SamplerSimple, SamplerTag, SamplerTrivial
 
-export make, randt, Size, Sized, test
+export make, randt, Size, Sized, Staged, test
 
 include("adapters.jl")
 
