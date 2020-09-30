@@ -3,8 +3,11 @@ using Test, RandomTest
 using RandomTest: minsize, maxsize
 using Random: MersenneTwister, gentype
 
+using Statistics: mean
+
 const rng = MersenneTwister()
 
+include("scalars.jl")
 include("adapters.jl")
 
 @testset "randt" begin
