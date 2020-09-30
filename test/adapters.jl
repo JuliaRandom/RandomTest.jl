@@ -43,3 +43,17 @@ end
     @test length(es) > 1
     @test es ⊆ [Int, UInt, Bool]
 end
+
+@testset "Abs" begin
+    d = Abs(Int8)
+    @test gentype(d) == Int8
+    @test extrema(rand(d, 10000)) == (0, 127) # checks that abs(typemin(Int8)) is handled
+
+    d = Abs(Normal())
+    @test gentype(d) == Float64
+    @test all(x -> x >= 0, rand(d, 10000))
+
+    d = Abs((-1, 3))
+    @test gentype(d) == Int
+    @test all(∈((1, 3)), rand(d, 100))
+end

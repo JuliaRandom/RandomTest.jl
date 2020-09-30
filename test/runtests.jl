@@ -2,6 +2,7 @@ using Test, RandomTest
 
 using RandomTest: minsize, maxsize
 using Random: MersenneTwister, gentype
+using RandomExtensions: Normal
 
 using Statistics: mean
 

@@ -43,3 +43,26 @@ end
 
 rand(rng::AbstractRNG, sp::SamplerTrivial{<:Staged}) =
     rand(rng, sp[].dist(rand(rng, sp[].inner)))
+
+
+## Abs
+
+struct Abs{X,D} <: Distribution{X}
+    d::D
+
+    Abs(d::D) where {D} = new{gentype(d),D}(d)
+end
+
+Sampler(::Type{RNG}, p::Abs, n::Repetition) where {RNG<:AbstractRNG} =
+    SamplerSimple(p, Sampler(RNG, p.d, n))
+
+rand(rng::AbstractRNG, p::SamplerSimple{<:Abs}) = abs(rand(rng, p.data))
+
+# work around the fact that abs(typemin(T)) can be == typemin(T)
+# so we currently enforce that the result of Abs must be >= 0
+# (this is not set in stone)
+rand(rng::AbstractRNG, p::SamplerSimple{<:Abs{<:Integer}}) =
+    while true
+        x = abs(rand(rng, p.data))
+        x < 0 || return x
+    end
