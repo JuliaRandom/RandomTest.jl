@@ -9,7 +9,7 @@ using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
                         SamplerSimple, SamplerTag, SamplerTrivial, Categorical
 
 export make, randt, Size, test
-export Sized, Staged, Abs, Frequency
+export Sized, Staged, Abs, Frequency, AdHoc
 export Small, Nat
 
 include("scalars.jl")

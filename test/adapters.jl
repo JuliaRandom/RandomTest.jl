@@ -71,3 +71,16 @@ end
               @test 8850 < count(∈(1:9), rand(d, 10000)) < 9150
     end
 end
+
+@testset "AdHoc" begin
+    for d in (AdHoc() do rng
+                  rand(rng, Bool) ? rand(rng, 1:3) : 4
+              end,
+              AdHoc{Int}() do rng
+                  rand(rng, Bool) ? rand(rng, 1:3) : 4
+              end)
+
+        @test gentype(d) == Int
+        all(∈(1:4), rand(d, 1000))
+    end
+end

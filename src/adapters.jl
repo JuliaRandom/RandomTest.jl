@@ -110,3 +110,20 @@ function show(io::IO, f::Frequency)
     join(io, (ps[i] => f.d[i] for i in eachindex(ps)), ", ")
     print(io, ")")
 end
+
+
+## AdHoc
+
+# TODO: find a better name
+
+struct AdHoc{X,F} <: Distribution{X}
+    f::F
+
+    AdHoc{X}(f::F) where {X,F} = new{X,F}(f)
+end
+
+AdHoc(f::F) where {F} = AdHoc{Core.Compiler.return_type(f, (AbstractRNG,))}(f)
+
+rand(rng::AbstractRNG, sp::SamplerTrivial{<:AdHoc}) = sp[].f(rng)
+
+show(io::IO, d::AdHoc) = println(io, "AdHoc{", gentype(d), "}(", d.f, ")")
