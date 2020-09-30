@@ -1,5 +1,7 @@
 module RandomTest
 
+import Base: show
+
 using Random: AbstractRNG, gentype, randexp, randn
 import Random: rand, Sampler
 
