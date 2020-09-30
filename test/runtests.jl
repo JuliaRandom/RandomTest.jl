@@ -10,6 +10,7 @@ const rng = MersenneTwister()
 
 include("scalars.jl")
 include("adapters.jl")
+include("test.jl")
 
 @testset "randt" begin
     @test randt() isa Float64
