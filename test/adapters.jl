@@ -57,3 +57,17 @@ end
     @test gentype(d) == Int
     @test all(∈((1, 3)), rand(d, 100))
 end
+
+@testset "Frequency" begin
+    for d in (Frequency(9 => 1:9, 1 => 10:99),
+              Frequency{Int}(9 => 1:9, 1 => 10:99),
+              Frequency((9 => 1:9, 1 => 10:99)),
+              Frequency{Int}((9 => 1:9, 1 => 10:99)),
+              Frequency([9 => 1:9, 1 => 10:99]),
+              Frequency{Int}([9 => 1:9, 1 => 10:99]))
+
+              @test gentype(d) == Int
+              @test rand(d) ∈ 1:99
+              @test 8850 < count(∈(1:9), rand(d, 10000)) < 9150
+    end
+end

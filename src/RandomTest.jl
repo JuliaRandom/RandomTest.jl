@@ -6,10 +6,10 @@ using Random: AbstractRNG, gentype, randexp, randn
 import Random: rand, Sampler
 
 using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
-                        SamplerSimple, SamplerTag, SamplerTrivial
+                        SamplerSimple, SamplerTag, SamplerTrivial, Categorical
 
 export make, randt, Size, test
-export Sized, Staged, Abs
+export Sized, Staged, Abs, Frequency
 export Small, Nat
 
 include("scalars.jl")

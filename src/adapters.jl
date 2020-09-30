@@ -74,3 +74,39 @@ rand(rng::AbstractRNG, p::SamplerSimple{<:Abs{<:Integer}}) =
     end
 
 show(io::IO, p::Abs) = println(io, "Abs(", p.d, ")") # don't show gentype, shown by p.d
+
+
+## Frequency
+
+# like MixtureModel (might be deleted when depending on proper package implementing it)
+
+struct Frequency{X,D} <: Distribution{X}
+    c::Categorical{Int}
+    d::D
+
+    function Frequency{X}(freqs::Union{Tuple,AbstractVector{<:Pair}}) where {X}
+        c = Categorical(f[1] for f in freqs)
+        d = collect(f[2] for f in freqs)
+        new{X,typeof(d)}(c, d)
+    end
+end
+
+function Frequency(freqs::Union{Tuple,AbstractVector{<:Pair}})
+    X = foldl(typejoin, (gentype(f[2]) for f in freqs); init = Union{});
+    Frequency{X}(freqs)
+end
+
+Frequency{X}(freqs::Pair...) where {X} = Frequency{X}(freqs)
+Frequency(freqs::Pair...) = Frequency(freqs)
+
+function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Frequency})
+    n = rand(rng, sp[].c)
+    rand(rng, sp[].d[n])
+end
+
+function show(io::IO, f::Frequency)
+    print(io, "Frequency{", gentype(f), "}(")
+    ps = [f.c.cdf[1]; diff(f.c.cdf);] # TODO: factor out
+    join(io, (ps[i] => f.d[i] for i in eachindex(ps)), ", ")
+    print(io, ")")
+end
