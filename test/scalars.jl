@@ -29,4 +29,8 @@
 
     m = mean(abs.(v))
     @test 878 < m < 1122
+
+    # overflow
+    d = Small(Int8, 100)
+    @test rand(d, 1000) isa Vector{Int8} # must not error out
 end

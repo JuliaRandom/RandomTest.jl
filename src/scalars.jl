@@ -14,5 +14,12 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{Small{T}}) where {T<:Abstract
     a + b
 end
 
-rand(rng::AbstractRNG, sp::SamplerTrivial{Small{T}}) where {T<:Integer} =
-    round(T, rand(Small(sp[].scale)))
+function rand(rng::AbstractRNG, sp::SamplerTrivial{Small{T}}) where {T<:Integer}
+    while true
+        x = rand(Small(sp[].scale))
+        if Base.hastypemax(T)
+            typemin(T) <= x <= typemax(T) || continue
+        end
+        return round(T, x)
+    end
+end
