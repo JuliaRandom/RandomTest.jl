@@ -76,6 +76,12 @@ end
     @test all(∈((1, 3)), rand(d, 100))
 end
 
+@testset "NonZero" begin
+    d = NonZero(0:2)
+    @test gentype(d) == Int
+    @test all(∈(1:2), rand(d, 100))
+end
+
 @testset "Frequency" begin
     for d in (Frequency(9 => 1:9, 1 => 10:99),
               Frequency{Int}(9 => 1:9, 1 => 10:99),

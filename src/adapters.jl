@@ -117,6 +117,24 @@ ratio(t::Real, a::Abs) = ratio(t, a.d)
 show(io::IO, p::Abs) = println(io, "Abs(", p.d, ")") # don't show gentype, shown by p.d
 
 
+## NonZero
+
+struct NonZero{X,D} <: Distribution{X}
+    d::D
+
+    NonZero(d::D) where {D} = new{gentype(d),D}(d)
+end
+
+Sampler(::Type{RNG}, p::NonZero, n::Repetition) where {RNG<:AbstractRNG} =
+    SamplerSimple(p, Sampler(RNG, p.d, n))
+
+rand(rng::AbstractRNG, p::SamplerSimple{<:NonZero}) =
+    while true
+        x = rand(rng, p.data)
+        iszero(x) || return x
+    end
+
+
 ## Frequency
 
 # like MixtureModel (might be deleted when depending on proper package implementing it)
