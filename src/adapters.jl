@@ -105,6 +105,8 @@ rand(rng::AbstractRNG, p::SamplerSimple{<:Abs{<:Integer}}) =
 
 scale(t::Real, a::Abs) = Abs(scale(t, a.d))
 
+ratio(t::Real, a::Abs) = ratio(t, a.d)
+
 show(io::IO, p::Abs) = println(io, "Abs(", p.d, ")") # don't show gentype, shown by p.d
 
 

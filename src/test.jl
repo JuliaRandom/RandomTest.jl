@@ -74,3 +74,24 @@ function test(::Type{Rational{T}}, t::Distribution{T}) where T
         end
     end
 end
+
+
+## Array
+
+
+sizedist(::Type{<:Array}, sz::Real) = Nat(sz)
+sizedist(::Type{<:Array}, sz) = sz
+
+function test(::Type{Array{T,N}}, Tdist, sz=33.0) where {T,N}
+    sd = sizedist(Array{T,N}, sz)
+    Sized{Array{T,N}}(sd) do sz
+        dims = N == 1 ? sz :
+            rand(Nat(1+ceil(Int, sz^(1/N))), NTuple{N}) # TODO: use a dist a dims when
+                                                        # RandomExtensions supports it
+        make(Array{T,N}, scale(0.5*(ratio(sz, sd)), Tdist), dims)
+        # TODO: refine (too often empty for N > 1)
+    end
+end
+
+test(::Type{Array{T,N}}, sz::Real=33.0) where {T,N} = test(Array{T,N}, test(T), sz)
+test(::Type{Array{T,N}}, ::Nothing, sz) where {T,N} = test(Array{T,N}, test(T), sz)

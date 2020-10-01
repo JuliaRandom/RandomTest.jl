@@ -26,6 +26,8 @@ end
 
 scale(t::Real, s::Small{T}) where {T} = Small{T}(s.scale * t)
 
+ratio(t::Real, s::Small) = t / s.scale
+
 
 ## Nat
 

@@ -52,3 +52,14 @@ end
     # TODO: test `scale`
     @test rand(scale(.3, test(Rational{Int})), 3) isa Vector{Rational{Int}}
 end
+
+@testset "Array" begin
+    for N = 1:4
+        for d in (test(Array{Int,N}), test(Array{Int,N}, 33), test(Array{Int,N}))
+            @test gentype(d) == Array{Int,N}
+            @test rand(d) isa Array{Int,N}
+        end
+    end
+    d = test(Array{Int, rand(1:9)}, 1:3)
+    @test all(∈(1:3), rand(d))
+end
