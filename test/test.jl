@@ -12,6 +12,19 @@ end
         @test rand(t) isa T
         @test gentype(t) == T
         v = rand(t, 2000)
+        @test 0 in v
         @test !isempty(intersect(v, [typemax(T)-T(i) for i = 0:20]))
+    end
+end
+
+@testset "Rational" begin
+    for T = Base.BitInteger_types
+        t = test(Rational{T})
+        @test rand(t) isa Rational{T}
+        @test gentype(t) == Rational{T}
+        v = rand(t, 1000)
+        @test 0 in v
+        @test any(!isfinite, v)
+        @test any(x -> !iszero(x) && isinteger(x), v)
     end
 end
