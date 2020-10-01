@@ -17,8 +17,17 @@ end
     end
 end
 
+@testset "BigInt" begin
+    t = test(BigInt)
+    @test rand(t) isa BigInt
+    @test gentype(t) == BigInt
+    v = rand(t, 500)
+    @test 0 in v
+    @test 30 < mean(filter(isfinite, log2.(abs.(v)))) < 60 # very roughly
+end
+
 @testset "Rational" begin
-    for T = Base.BitInteger_types
+    for T = [BigInt, Base.BitInteger_types...]
         t = test(Rational{T})
         @test rand(t) isa Rational{T}
         @test gentype(t) == Rational{T}

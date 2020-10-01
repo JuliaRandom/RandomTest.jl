@@ -42,6 +42,7 @@ end
 minsize(::Type{<:Integer}) = 0
 maxsize(::Type{T}) where {T <: Base.BitInteger} = 8*sizeof(T) - (T <: Signed)
 maxsize(::Type{Bool}) = 1
+maxsize(::Type{BigInt}) = typemax(Int)
 
 function Sampler(::Type{RNG}, d::Make1{T,Size},
                  r::Repetition) where T <: Integer where RNG <:AbstractRNG

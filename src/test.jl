@@ -20,6 +20,8 @@ test(::Type{Float64}) =
 
 ## Integer
 
+### BitInteger
+
 # TODO: do not restrict to Base.BitInteger
 # (this is in part to have old tests with `Tester` pass)
 function test(::Type{T}) where {T<:Base.BitInteger}
@@ -32,6 +34,20 @@ function test(::Type{T}) where {T<:Base.BitInteger}
                 typemax(T) - rand(rng, Small(T))
             end
         end
+    end
+end
+
+### BigInt
+
+sizedist(::Type{BigInt}) = Frequency(3  => Nat(10),
+                                     10 => Nat(33),
+                                     2  => Nat(150))
+
+sizedist(::Type{BigInt}, sz::Real) = Nat(sz)
+
+function test(::Type{BigInt}, sz...)
+    Sized{BigInt}(sizedist(BigInt, sz...)) do sz
+        make(BigInt, Size(sz))
     end
 end
 
