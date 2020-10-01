@@ -72,4 +72,10 @@ end
     d = test(Matrix, test(UInt), 3)
     @test gentype(d) == Matrix{UInt}
     @test rand(d) isa Matrix{UInt}
+
+    d = test(Array{Int})
+    @test rand(d) isa Array{Int}
+    d = test(Array{Int}, 1:9)
+    @test all(∈(1:9), rand(d))
+    # TODO: test `scale` to check that it scales size / elements
 end

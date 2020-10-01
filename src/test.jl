@@ -99,3 +99,11 @@ test(::Type{Array{T,N}}, ::Nothing, sz) where {T,N} = test(Array{T,N}, test(T), 
 
 test(::Type{Array{T,N} where T}, Tdist, sz...) where {N} =
     test(Array{gentype(Tdist),N}, Tdist, sz...)
+
+test(::Type{Array{T}}, Tdist, sz=33.0) where {T} =
+    Staged{Array{T}}(Nat(2)) do N
+        test(Array{T,N}, Tdist, sz)
+    end
+
+test(::Type{Array{T}}, sz::Real=33.0) where {T} = test(Array{T}, test(T), sz)
+test(::Type{Array{T}}, ::Nothing, sz) where {T} = test(Array{T}, test(T), sz)

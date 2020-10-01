@@ -36,8 +36,10 @@ show(io::IO, s::Sized) =
 struct Staged{X,D<:Function,S} <: Distribution{X}
     dist::D
     inner::S
+    scale::Float64
 
-    Staged{X}(dist::D, inner::S) where {X,D,S} = new{X,D,S}(dist, inner)
+    Staged{X}(dist::D, inner::S, scale::Real=1.0) where {X,D,S} =
+        new{X,D,S}(dist, inner, scale)
 end
 
 function Staged(dist::D, inner) where {D<:Function} # specialize on dist
@@ -46,11 +48,16 @@ function Staged(dist::D, inner) where {D<:Function} # specialize on dist
     Staged{X}(dist, inner)
 end
 
-rand(rng::AbstractRNG, sp::SamplerTrivial{<:Staged}) =
-    rand(rng, sp[].dist(rand(rng, sp[].inner)))
+function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Staged})
+    x = rand(rng, sp[].inner)
+    d = scale(sp[].scale, sp[].dist(x))
+    rand(rng, d)
+end
 
 show(io::IO, s::Staged) =
     println(io, "Staged{", gentype(s), "}(", s.dist, ", ", s.inner, ")")
+
+scale(t::Real, s::Staged{X}) where {X} = Staged{X}(s.dist, s.inner, s.scale * t)
 
 
 ## Stacked
