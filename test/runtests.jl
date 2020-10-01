@@ -2,7 +2,7 @@ using Test, RandomTest
 
 using RandomTest: minsize, maxsize
 using Random: MersenneTwister, gentype
-using RandomExtensions: Normal
+using RandomExtensions: Normal, CloseOpen
 
 using Statistics: mean
 
@@ -11,6 +11,7 @@ const rng = MersenneTwister()
 include("scalars.jl")
 include("adapters.jl")
 include("test.jl")
+include("QuickCheck.jl")
 
 struct MyDist end
 RandomTest.test(::MyDist) = Normal()

@@ -12,10 +12,12 @@ using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
 export make, randt, Size, test, scale
 export Sized, Staged, Stacked, Abs, NonZero, Frequency, AdHoc
 export Small, Nat
+export @quickcheck
 
 include("scalars.jl")
 include("adapters.jl")
 include("test.jl")
+include("QuickCheck.jl")
 
 
 ## scale & ratio #############################################################
