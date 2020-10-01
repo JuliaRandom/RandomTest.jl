@@ -9,7 +9,7 @@ using RandomExtensions: Cont, Distribution, make, Make1, Repetition,
                         SamplerSimple, SamplerTag, SamplerTrivial,
                         Categorical, CloseOpen12
 
-export make, randt, Size, test
+export make, randt, Size, test, scale
 export Sized, Staged, Stacked, Abs, Frequency, AdHoc
 export Small, Nat
 

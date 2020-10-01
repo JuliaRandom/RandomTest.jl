@@ -4,6 +4,8 @@
     @test gentype(t) == Float64
     v = rand(t, Set, 1000) # from RandomExtensions; must use a Set for `NaN in` to work
     @test NaN in v && Inf in v && -Inf in v && 0.0 in v && -0.0 in v && any(isinteger, v)
+    # TODO: test `scale` better
+    @test rand(scale(.3, t), 3) isa Vector{Float64}
 end
 
 @testset "BitInteger" begin
@@ -15,6 +17,14 @@ end
         @test 0 in v
         @test !isempty(intersect(v, [typemax(T)-T(i) for i = 0:20]))
     end
+    for T = (Int, UInt)
+        t = test(T)
+        v = rand(t, 1000)
+        @test 16 < mean(log2.(0.01 .+ filter(!=(typemin(T)), abs.(v)))) < 23
+        t = scale(0.5, t)
+        v = rand(t, 1000)
+        @test 7 < mean(log2.(0.01 .+ filter(!=(typemin(T)), abs.(v)))) < 12
+    end
 end
 
 @testset "BigInt" begin
@@ -24,6 +34,9 @@ end
     v = rand(t, 500)
     @test 0 in v
     @test 30 < mean(filter(isfinite, log2.(abs.(v)))) < 60 # very roughly
+
+    v = rand(scale(10, t), 500)
+    @test 300 < mean(filter(isfinite, log2.(abs.(v)))) < 600 # very roughly
 end
 
 @testset "Rational" begin
@@ -36,4 +49,6 @@ end
         @test any(!isfinite, v)
         @test any(x -> !iszero(x) && isinteger(x), v)
     end
+    # TODO: test `scale`
+    @test rand(scale(.3, test(Rational{Int})), 3) isa Vector{Rational{Int}}
 end

@@ -25,6 +25,8 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{<:Sized})
     rand(rng, sized.dist(sz))
 end
 
+scale(t::Real, sz::Sized{X}) where {X} = Sized{X}(sz.dist, sz.sz, sz.scale * t)
+
 show(io::IO, s::Sized) =
     println(io, "Sized{", gentype(s), "}(", s.dist, ", ", s.sz, ", ", s.scale, ")")
 
@@ -73,6 +75,8 @@ end
 rand(rng::AbstractRNG, sp::SamplerTrivial{<:Stacked}) =
     rand(rng, sp[].dist(sp[].inner))
 
+scale(t::Real, s::Stacked{X}) where {X} = Stacked{X}(s.dist, scale(t, s.inner))
+
 show(io::IO, s::Stacked) =
     println(io, "Stacked{", gentype(s), "}(", s.dist, ", ", s.inner, ")")
 
@@ -98,6 +102,8 @@ rand(rng::AbstractRNG, p::SamplerSimple{<:Abs{<:Integer}}) =
         x = abs(rand(rng, p.data))
         x < 0 || return x
     end
+
+scale(t::Real, a::Abs) = Abs(scale(t, a.d))
 
 show(io::IO, p::Abs) = println(io, "Abs(", p.d, ")") # don't show gentype, shown by p.d
 

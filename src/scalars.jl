@@ -24,6 +24,8 @@ function rand(rng::AbstractRNG, sp::SamplerTrivial{Small{T}}) where {T<:Integer}
     end
 end
 
+scale(t::Real, s::Small{T}) where {T} = Small{T}(s.scale * t)
+
 
 ## Nat
 

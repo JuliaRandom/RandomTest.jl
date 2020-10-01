@@ -14,6 +14,9 @@
         @test 29 < m < 37
         @test maximum(sort(abs.(v))[1:end-50]) < 103
 
+        w = rand(scale(0.5, d), 1000)
+        @test 29/2 < mean(abs.(w)) < 37/2
+
         v = rand(d, 20000)
         @test -1.3 < mean(v) < 1.3
         m = mean(abs.(v))
@@ -38,7 +41,10 @@ end
 @testset "Nat" begin
     for d in (Nat(), Nat(Int), Nat(33.0), Nat(Int, 33.0))
         @test d isa Abs{Int64,Small{Int64}}
-    end
 
-    # TODO: test scale
+        v = rand(d, 1000)
+        @test 29 < mean(abs.(v)) < 37
+        w = rand(scale(0.5, d), 1000)
+        @test 29/2 < mean(abs.(w)) < 37/2
+    end
 end
