@@ -54,7 +54,7 @@ end
 end
 
 @testset "Array" begin
-    for N = 1:4
+    for N = 0:4
         for d in (test(Array{Int,N}), test(Array{Int,N}, 33), test(Array{Int,N}))
             @test gentype(d) == Array{Int,N}
             @test rand(d) isa Array{Int,N}

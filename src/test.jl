@@ -85,7 +85,8 @@ sizedist(::Type{<:Array}, sz) = sz
 function test(::Type{Array{T,N}}, Tdist, sz=33.0) where {T,N}
     sd = sizedist(Array{T,N}, sz)
     Sized{Array{T,N}}(sd) do sz
-        dims = N == 1 ? sz :
+        dims = N == 0 ? () :
+               N == 1 ? sz :
             rand(Nat(1+ceil(Int, sz^(1/N))), NTuple{N}) # TODO: use a dist a dims when
                                                         # RandomExtensions supports it
         make(Array{T,N}, scale(0.5*(ratio(sz, sd)), Tdist), dims)
