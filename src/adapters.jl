@@ -51,6 +51,32 @@ show(io::IO, s::Staged) =
     println(io, "Staged{", gentype(s), "}(", s.dist, ", ", s.inner, ")")
 
 
+## Stacked
+
+# like Staged, but forwards directly the inner distribution instead of sampling
+# from it first
+# the point is that Stacked delegates scaling operations to inner, like Sized
+
+struct Stacked{X,D<:Function,S} <: Distribution{X}
+    dist::D
+    inner::S
+
+    Stacked{X}(dist::D, inner::S) where {X,D,S} = new{X,D,S}(dist, inner)
+end
+
+function Stacked(dist::D, inner) where {D<:Function} # specialize on dist
+    N = gentype(inner)
+    X = gentype(Core.Compiler.return_type(dist, (N,)))
+    Stacked{X}(dist, inner)
+end
+
+rand(rng::AbstractRNG, sp::SamplerTrivial{<:Stacked}) =
+    rand(rng, sp[].dist(sp[].inner))
+
+show(io::IO, s::Stacked) =
+    println(io, "Stacked{", gentype(s), "}(", s.dist, ", ", s.inner, ")")
+
+
 ## Abs
 
 struct Abs{X,D} <: Distribution{X}

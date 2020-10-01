@@ -44,6 +44,24 @@ end
     @test es ⊆ [Int, UInt, Bool]
 end
 
+@testset "Stacked" begin
+    for d in (Stacked{Vector{Int}}(d -> make(Vector, d, rand(d)), 1:9),
+              Stacked(d -> make(Vector, d, rand(d)), 1:9))
+        # TODO: replace rand(d) above by d when RandomExtensions supports it
+        @test gentype(d) <: Vector
+        v = rand(d)
+        @test length(v) ∈ 1:9
+        @test all(∈(1:9), v)
+    end
+
+    d = Stacked((Int, UInt, Bool)) do Ts
+        make(Vector, Ts, 3)
+    end
+    # we don't test gentype(d), it's too hard on the compiler
+    v = rand(d, 10)
+    @test all(x -> x isa Vector{DataType}, v)
+end
+
 @testset "Abs" begin
     d = Abs(Int8)
     @test gentype(d) == Int8
