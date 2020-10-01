@@ -95,3 +95,6 @@ end
 
 test(::Type{Array{T,N}}, sz::Real=33.0) where {T,N} = test(Array{T,N}, test(T), sz)
 test(::Type{Array{T,N}}, ::Nothing, sz) where {T,N} = test(Array{T,N}, test(T), sz)
+
+test(::Type{Array{T,N} where T}, Tdist, sz...) where {N} =
+    test(Array{gentype(Tdist),N}, Tdist, sz...)

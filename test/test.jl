@@ -62,4 +62,14 @@ end
     end
     d = test(Array{Int, rand(1:9)}, 1:3)
     @test all(∈(1:3), rand(d))
+
+    d = test(Vector, 1:9, 1:3)
+    @test gentype(d) == Vector{Int}
+    v = rand(d)
+    @test length(v) ∈ 1:3
+    @test all(∈(1:9), v)
+
+    d = test(Matrix, test(UInt), 3)
+    @test gentype(d) == Matrix{UInt}
+    @test rand(d) isa Matrix{UInt}
 end
