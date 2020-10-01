@@ -29,6 +29,9 @@ ratio(n::Real, x) = 1.0
 randt(                  ::Type{X}=Float64) where {X} = rand(     test(X))
 randt(rng::AbstractRNG, ::Type{X}=Float64) where {X} = rand(rng, test(X))
 
+randt(                  X) = rand(     test(X))
+randt(rng::AbstractRNG, X) = rand(rng, test(X))
+
 randt(                  dims::Integer...) = rand(     test(Float64), dims...)
 randt(rng::AbstractRNG, dims::Integer...) = rand(rng, test(Float64), dims...)
 
@@ -37,6 +40,9 @@ randt(                  ::Type{X}, dims...) where {X} =
 
 randt(rng::AbstractRNG, ::Type{X}, dims...) where {X} =
     rand(rng, test(X), dims...)
+
+randt(                  X, dims...) = rand(     test(X), dims...)
+randt(rng::AbstractRNG, X, dims...) = rand(rng, test(X), dims...)
 
 
 ## Size ######################################################################

@@ -12,17 +12,27 @@ include("scalars.jl")
 include("adapters.jl")
 include("test.jl")
 
+struct MyDist end
+RandomTest.test(::MyDist) = Normal()
+
 @testset "randt" begin
     @test randt() isa Float64
     @test randt(rng) isa Float64
     @test randt(Int) isa Int
     @test randt(rng, Int) isa Int
+    d = MyDist()
+    @test randt(d) isa Float64
+    @test randt(rng, d) isa Float64
+
     @test randt(2, 3) isa Matrix{Float64}
     @test randt(rng, 2, 3) isa Matrix{Float64}
     @test randt(Int, 2, 3) isa Matrix{Int}
     @test randt(rng, Int, 2, 3) isa Matrix{Int}
     @test randt(Int, (2, 3)) isa Matrix{Int}
     @test randt(rng, Int, (2, 3)) isa Matrix{Int}
+    @test randt(rng, d, 2, 3) isa Matrix{Float64}
+    @test randt(d, (2, 3)) isa Matrix{Float64}
+    @test randt(rng, d, (2, 3)) isa Matrix{Float64}
 end
 
 @testset "Size" begin
